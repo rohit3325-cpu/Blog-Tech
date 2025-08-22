@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <%- include('./partials/head')  %>
+   <%- include('./partials/head') %>
    <title>SignUp Page</title>
    <style>
       body {
@@ -46,17 +46,34 @@
          from {opacity: 0; transform: translateY(20px);}
          to {opacity: 1; transform: translateY(0);}
       }
+      /* OTP Section */
+      .otp-section {
+         margin-top: 1.5rem;
+         display: none;
+      }
+      .otp-input {
+         display: flex;
+         justify-content: space-between;
+      }
+      .otp-input input {
+         width: 40px;
+         height: 50px;
+         text-align: center;
+         font-size: 1.5rem;
+         border: 1px solid #ccc;
+         border-radius: 8px;
+      }
    </style>
 </head>
 <body>
    <!-- Navbar always on top -->
-   <%- include('./partials/navbar')  %>
+   <%- include('./partials/navbar') %>
 
    <!-- Signup Form Centered -->
    <div class="signup-section">
       <div class="signup-card">
          <h2>Create Account</h2>
-         <form action="/user/signup" method="post">
+         <form id="signupForm" action="/user/signup" method="post">
             <div class="mb-3">
                <label for="fullName" class="form-label">Full Name</label>
                <input type="text" class="form-control" id="fullName" name="fullName" required>
@@ -76,8 +93,45 @@
             </div>
             <button type="submit" class="btn btn-primary">Sign Up</button>
          </form>
+
+         <!-- OTP Verification Section -->
+         <div class="otp-section" id="otpSection">
+            <h5>Enter the OTP sent to your email</h5>
+            <form action="/user/verify-otp" method="post">
+               <input type="hidden" name="email" id="otpEmail">
+               <div class="otp-input mb-3">
+                  <input type="text" maxlength="1" name="otp[]" required>
+                  <input type="text" maxlength="1" name="otp[]" required>
+                  <input type="text" maxlength="1" name="otp[]" required>
+                  <input type="text" maxlength="1" name="otp[]" required>
+                  <input type="text" maxlength="1" name="otp[]" required>
+                  <input type="text" maxlength="1" name="otp[]" required>
+               </div>
+               <button type="submit" class="btn btn-success w-100">Verify OTP</button>
+            </form>
+            <p class="text-center mt-2"><a href="#" onclick="resendOtp()">Resend OTP</a></p>
+         </div>
       </div>
    </div>
+
+   <script>
+      // Example: Show OTP section after signup (client-side simulation)
+      const signupForm = document.getElementById("signupForm");
+      const otpSection = document.getElementById("otpSection");
+      const otpEmail = document.getElementById("otpEmail");
+
+      signupForm.addEventListener("submit", function(e) {
+         e.preventDefault();
+         otpEmail.value = document.getElementById("exampleInputEmail1").value;
+         signupForm.style.display = "none";
+         otpSection.style.display = "block";
+      });
+
+      function resendOtp() {
+         alert("OTP resent to your email!");
+         // Make an AJAX call to /user/resend-otp if needed
+      }
+   </script>
 
    <%- include('./partials/script') %>
 </body>
