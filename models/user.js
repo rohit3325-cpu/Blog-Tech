@@ -29,6 +29,16 @@ const userSchema = new Schema({
         enum: ["USER","ADMIN"],
         default:"USER",
     },
+     otp: {
+      type: String,
+    },
+    otpExpiresAt: {
+      type: Date,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
 },
  {timestamps: true});
 

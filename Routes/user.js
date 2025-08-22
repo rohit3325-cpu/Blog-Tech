@@ -1,5 +1,6 @@
 const {Router} = require("express");
 const User = require("../models/user"); // Assuming the user model is in models/user.js
+const { register, verifyOTP } = require('../controllers/user');
 
 const router = Router();
 
@@ -35,6 +36,9 @@ router.post("/signup", async(req,res)=>{
 
 router.get("/logout",(req,res)=>{
      res.clearCookie("token").redirect("/");
-})
+});
+
+router.post('/register', register);
+router.post('/verify-otp', verifyOTP);
 
 module.exports = router;

@@ -1,4 +1,6 @@
 const JWT = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 const secret = "$ironMan33";
 
@@ -23,3 +25,30 @@ module.exports = {
     createTokenForUser,
     validateToken
 }
+
+
+exports.sendOTP = async (email) => {
+    // Generate a 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    // Configure nodemailer
+    const transporter = nodemailer.createTransport({
+        service: 'gmail', // Or any SMTP
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Your OTP for Email Verification',
+        text: `Your OTP is ${otp}. It is valid for 10 minutes.`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return { otp, otpExpiry };
+};
