@@ -31,6 +31,7 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null; 
   next();
 });
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 
 app.get('/', async(req,res)=>{
