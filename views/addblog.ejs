@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <%- include('./partials/head')  %>
+   <title>Add Blog Page</title>
+   <style>
+     body {
+       background: #f8f9fa;
+       font-family: 'Inter', sans-serif;
+       transition: background 0.3s, color 0.3s;
+     }
+     body.dark-mode {
+       background: #121212;
+       color: #f1f1f1;
+     }
+
+     .form-card {
+       max-width: 700px;
+       margin: 50px auto;
+       background: #fff;
+       padding: 2rem;
+       border-radius: 1rem;
+       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+       transition: background 0.3s, color 0.3s;
+     }
+     body.dark-mode .form-card {
+       background: #1e1e1e;
+       color: #f1f1f1;
+     }
+
+     .form-label {
+       font-weight: 600;
+       color: #333;
+     }
+     body.dark-mode .form-label {
+       color: #ddd;
+     }
+
+     .form-control {
+       transition: background 0.3s, color 0.3s, border-color 0.3s;
+     }
+     body.dark-mode .form-control {
+       background: #2a2a2a;
+       color: #f1f1f1;
+       border-color: #444;
+     }
+     body.dark-mode .form-control::placeholder {
+       color: #bbb;
+     }
+
+     .btn-primary {
+       width: 100%;
+       padding: 0.75rem;
+       font-size: 1rem;
+       border-radius: 0.5rem;
+     }
+   </style>
+</head>
+<body>
+    <%- include('./partials/navbar')  %>
+
+    <div class="container">
+        <div class="form-card">
+            <h2 class="mb-4 text-center">✍️ Create a New Blog</h2>
+            
+            <form action="/blog" method="post" enctype="multipart/form-data">
+              
+              <div class="mb-3">
+                <label for="title" class="form-label">Blog Title</label>
+                <input type="text" class="form-control shadow-sm" id="title" name="title" placeholder="Enter your blog title">
+              </div>
+
+              <div class="mb-3">
+                <label for="coverImage" class="form-label">Cover Image</label>
+                <input type="file" class="form-control shadow-sm" id="coverImage" name="coverImage">
+              </div>
+
+              <div class="mb-3">
+                <label for="body" class="form-label">Content</label>
+                <textarea class="form-control shadow-sm" id="body" name="body" rows="6" placeholder="Write your blog here..."></textarea>
+              </div>
+
+              <div class="mb-3">
+                <button class="btn btn-primary shadow-sm" type="submit">🚀 Publish Blog</button>
+              </div>
+            </form>
+        </div>
+    </div>
+    
+    <%- include('./partials/footer')  %>
+    <%- include('./partials/script') %>
+
+    <script>
+      const toggleBtn = document.getElementById("darkToggle");
+      if(toggleBtn){
+        toggleBtn.addEventListener("click", () => {
+          document.body.classList.toggle("dark-mode");
+        });
+      }
+    </script>
+</body>
+</html>

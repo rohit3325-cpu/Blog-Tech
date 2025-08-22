@@ -1,0 +1,51 @@
+<!-- Footer -->
+<footer class="bg-dark text-light pt-5 pb-3 mt-5">
+  <div class="container">
+    <div class="row">
+      <!-- About -->
+      <div class="col-md-4 mb-4">
+        <h5 class="fw-bold"><i class="bi bi-journal-text me-2"></i>Blog-Tech</h5>
+        <p class="text-secondary">
+          Share your thoughts, ideas, and stories with the world.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-4 mb-4">
+        <h5 class="fw-bold">Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="/" class="footer-link"><i class="bi bi-house-door me-2"></i>Home</a></li>
+          <li><a href="/user/signin" class="footer-link"><i class="bi bi-box-arrow-in-right me-2"></i>Login</a></li>
+          <li><a href="/user/signup" class="footer-link"><i class="bi bi-person-plus me-2"></i>Register</a></li>
+          <li><a href="/blog/add-new" class="footer-link"><i class="bi bi-plus-square me-2"></i>Add Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-md-4 mb-4">
+        <h5 class="fw-bold">Contact</h5>
+        <p class="mb-1"><i class="bi bi-geo-alt me-2"></i> New Delhi, India</p>
+        <p class="mb-1"><i class="bi bi-envelope me-2"></i> support@blogapp.com</p>
+        <p><i class="bi bi-telephone me-2"></i> +91 9876543210</p>
+      </div>
+    </div>
+
+    <hr class="border-secondary">
+
+    <div class="text-center">
+      <p class="mb-0 text-secondary">&copy; <%= new Date().getFullYear() %> BlogApp. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Custom CSS -->
+<style>
+  .footer-link {
+    color: #bbb; /* visible gray */
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-link:hover {
+    color: #fff; /* bright white on hover */
+  }
+</style>

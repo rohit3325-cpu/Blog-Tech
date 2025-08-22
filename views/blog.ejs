@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>BlogPage</title>
+  <style>
+    :root {
+      --primary: #6a11cb;
+      --secondary: #2575fc;
+      --text-light: #f1f1f1;
+      --text-dark: #212529;
+      --card-bg: rgba(255, 255, 255, 0.6);
+      --card-bg-dark: rgba(30, 30, 30, 0.8);
+    }
+
+    body {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      color: var(--text-dark);
+      font-family: "Inter", sans-serif;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+    body.dark-mode {
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      color: var(--text-light);
+    }
+
+    .hero-title {
+      font-weight: 800;
+      font-size: 3rem;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -1px;
+    }
+    body.dark-mode .hero-title {
+      background: linear-gradient(90deg, #a18cd1, #fbc2eb);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .blog-cover {
+      max-height: 480px;
+      object-fit: cover;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      transition: transform 0.4s ease;
+    }
+    .blog-cover:hover {
+      transform: scale(1.05);
+    }
+
+    .blog-card {
+      backdrop-filter: blur(16px);
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+      transition: background 0.5s ease;
+    }
+    body.dark-mode .blog-card {
+      background: var(--card-bg-dark);
+      color: var(--text-light);
+      box-shadow: 0 10px 35px rgba(255, 255, 255, 0.05);
+    }
+
+    .profile-img {
+      width: 65px;
+      height: 65px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease;
+    }
+    .profile-img:hover {
+      transform: scale(1.1);
+    }
+
+    pre {
+      white-space: pre-wrap;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: inherit;
+    }
+
+    input, textarea {
+      border-radius: 12px !important;
+      padding: 0.75rem !important;
+      border: 1px solid #ccc !important;
+      transition: all 0.3s ease;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--secondary) !important;
+      box-shadow: 0 0 8px rgba(37, 117, 252, 0.4);
+    }
+    body.dark-mode input,
+    body.dark-mode textarea {
+      background: #2a2a2a !important;
+      color: var(--text-light) !important;
+      border: 1px solid #555 !important;
+    }
+
+    button {
+      border-radius: 12px !important;
+      padding: 0.5rem 1.2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.9s forwards;
+    }
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .comment-box {
+      border-radius: 16px;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      transition: 0.3s ease;
+    }
+    body.dark-mode .comment-box {
+      background: var(--card-bg-dark);
+    }
+  </style>
+</head>
+<body>
+  <%- include('./partials/navbar') %>
+
+  <div class="container my-5">
+    <h1 class="hero-title text-center fade-up"><%= blog.title %></h1>
+
+    <div class="text-center mb-5 fade-up" style="animation-delay: 0.2s;">
+      <img src="<%= blog.coverImageURL %>" alt="Blog Cover" class="img-fluid blog-cover">
+    </div>
+
+    <div class="blog-card fade-up" style="animation-delay: 0.4s;">
+      <pre><%= blog.body %></pre>
+    </div>
+
+    <div class="d-flex align-items-center mt-5 p-3 rounded shadow-sm fade-up" 
+         style="animation-delay: 0.6s; background: var(--card-bg);">
+      <img src="<%= blog.createdBy.profileImageURL %>" alt="Author" class="profile-img me-3">
+      <div>
+        <h6 class="mb-0 fw-bold"><%= blog.createdBy.fullName %></h6>
+        <small class="text-muted">Author</small>
+      </div>
+    </div>
+  </div>
+    
+  <div class="container mt-3">
+    <h3 class="fw-bold">Comments (<%= comments.length %>)</h3>
+    <% if (locals.user) { %>
+      <form action="/blog/comment/<%= blog._id %>" method="post" class="fade-up" style="animation-delay: 0.8s;">
+        <div class="mb-3">
+          <input type="text" class="form-control"  name="content" placeholder="Enter your comment...">
+          <button class="btn btn-primary mt-2" type="submit">Add Comment</button>
+        </div>
+      </form>
+    <% } %>
+
+    <div class="mt-3">
+      <% comments.forEach(comment => { %>
+        <div class="d-flex align-items-center comment-box fade-up" style="animation-delay: 1s;">
+          <img src="<%= comment.createdBy.profileImageURL %>" alt="Author" class="profile-img me-3" />
+          <div>
+            <strong><%= comment.createdBy.fullName %></strong>
+            <pre><%= comment.content %></pre>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <%- include('./partials/footer') %>
+  <%- include('./partials/script') %>
+</body>
+</html>
+
+

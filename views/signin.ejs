@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <%- include('./partials/head')  %>
+   <title>SignIn Page</title>
+   <style>
+      body {
+         background: linear-gradient(135deg, #43cea2, #185a9d);
+         min-height: 100vh;
+         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+         margin: 0;
+      }
+      .signin-section {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         padding: 60px 15px;
+      }
+      .signin-card {
+         background: #fff;
+         border-radius: 20px;
+         box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+         padding: 2rem;
+         width: 100%;
+         max-width: 420px;
+         animation: fadeIn 0.6s ease-in-out;
+      }
+      .signin-card h2 {
+         font-weight: 600;
+         margin-bottom: 1.5rem;
+         text-align: center;
+         color: #333;
+      }
+      .btn-primary {
+         width: 100%;
+         border-radius: 12px;
+         padding: 0.75rem;
+         font-weight: 500;
+         transition: 0.3s;
+      }
+      .btn-primary:hover {
+         transform: translateY(-2px);
+         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      }
+      @keyframes fadeIn {
+         from {opacity: 0; transform: translateY(20px);}
+         to {opacity: 1; transform: translateY(0);}
+      }
+   </style>
+</head>
+<body>
+   <!-- Navbar stays on top -->
+   <%- include('./partials/navbar')  %>
+
+   <!-- SignIn Form -->
+   <div class="signin-section">
+      <div class="signin-card">
+         <h2>Sign In</h2>
+         <form action="/user/signin" method="post">
+            <div class="mb-3">
+               <label for="exampleInputEmail1" class="form-label">Email address</label>
+               <input type="email" class="form-control" id="exampleInputEmail1" name="email" required>
+               <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+               <label for="exampleInputPassword1" class="form-label">Password</label>
+               <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
+            </div>
+            <div class="mb-3 form-check">
+               <input type="checkbox" class="form-check-input" id="exampleCheck1">
+               <label class="form-check-label" for="exampleCheck1">Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+         </form>
+      </div>
+   </div>
+
+   <%- include('./partials/script') %>
+</body>
+</html>
