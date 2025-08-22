@@ -16,7 +16,7 @@ const app=express();
 const PORT = process.env.PORT || 8000;
 
 mongoose
-       .connect(process.env.MONGODB_URL)
+       .connect(process.env.MONGODB_URI)
        .then((e)=>{console.log("Connected to MongoDB")});
 
 app.set("view engine", "ejs");
