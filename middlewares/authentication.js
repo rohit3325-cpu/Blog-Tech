@@ -16,6 +16,16 @@ function checkForAuthenticationCookie(cookieName) {
     };
 }
 
+function ensureAuth(req, res, next) {
+  if (req.user) {
+    return next();
+  }
+  return res.redirect("/login"); // Or res.status(401).send("Unauthorized")
+}
+
+module.exports = { ensureAuth };
+
+
 module.exports = {
     checkForAuthenticationCookie,
 };

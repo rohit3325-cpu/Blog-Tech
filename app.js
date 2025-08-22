@@ -10,6 +10,7 @@ const Blog =require("./models/blog");
 const userRoute = require('./Routes/user');
 const blogRoute = require('./Routes/blog');
 const { checkForAuthenticationCookie } = require("./middlewares/authentication");
+const { ensureAuth } = require("./middlewares/authentication");
 
 const app=express();
 const PORT = process.env.PORT || 8000;
@@ -25,6 +26,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token"));
 app.use(express.static(path.resolve('./public')));
+// After app.use(checkForAuthenticationCookie("token"))
+app.use((req, res, next) => {
+  res.locals.user = req.user || null; 
+  next();
+});
+
 
 app.get('/', async(req,res)=>{
     const allBlogs = await Blog.find({});

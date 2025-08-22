@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <%- include('./partials/head')  %>
+   <title>Edit Blog</title>
+   <style>
+     body {
+       background: #f8f9fa;
+       font-family: 'Inter', sans-serif;
+       transition: background 0.3s, color 0.3s;
+     }
+     body.dark-mode {
+       background: #121212;
+       color: #f1f1f1;
+     }
+
+     .form-card {
+       max-width: 700px;
+       margin: 50px auto;
+       background: #fff;
+       padding: 2rem;
+       border-radius: 1rem;
+       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+       transition: background 0.3s, color 0.3s;
+     }
+     body.dark-mode .form-card {
+       background: #1e1e1e;
+       color: #f1f1f1;
+     }
+
+     .form-label {
+       font-weight: 600;
+       color: #333;
+     }
+     body.dark-mode .form-label {
+       color: #ddd;
+     }
+
+     .form-control {
+       transition: background 0.3s, color 0.3s, border-color 0.3s;
+     }
+     body.dark-mode .form-control {
+       background: #2a2a2a;
+       color: #f1f1f1;
+       border-color: #444;
+     }
+     body.dark-mode .form-control::placeholder {
+       color: #bbb;
+     }
+
+     .btn-primary {
+       width: 100%;
+       padding: 0.75rem;
+       font-size: 1rem;
+       border-radius: 0.5rem;
+     }
+
+     .current-image img {
+       border-radius: 0.5rem;
+       margin-top: 0.5rem;
+       width: 100%;
+       height: auto;
+       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+     }
+
+     .btn-cancel {
+       display: inline-block;
+       padding: 0.75rem 1.5rem;
+       border-radius: 0.5rem;
+       background: #ccc;
+       color: #212529;
+       text-decoration: none;
+       font-weight: 500;
+       transition: background 0.3s;
+     }
+     .btn-cancel:hover {
+       background: #b3b3b3;
+       text-decoration: none;
+     }
+   </style>
+</head>
+<body>
+    <%- include('./partials/navbar')  %>
+
+    <div class="container">
+        <div class="form-card">
+            <h2 class="mb-4 text-center">✏️ Edit Blog</h2>
+            
+            <form action="/blog/edit/<%= blog._id %>" method="POST" enctype="multipart/form-data">
+              
+              <div class="mb-3">
+                <label for="title" class="form-label">Blog Title</label>
+                <input type="text" class="form-control shadow-sm" id="title" name="title" value="<%= blog.title %>" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="body" class="form-label">Content</label>
+                <textarea class="form-control shadow-sm" id="body" name="body" rows="6" required><%= blog.body %></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Current Cover Image</label>
+                <% if (blog.coverImageURL) { %>
+                  <div class="current-image">
+                    <img src="<%= blog.coverImageURL %>" alt="Cover Image">
+                  </div>
+                <% } else { %>
+                  <p>No image uploaded</p>
+                <% } %>
+              </div>
+
+              <div class="mb-3">
+                <label for="coverImage" class="form-label">Upload New Cover Image (optional)</label>
+                <input type="file" class="form-control shadow-sm" id="coverImage" name="coverImage" accept="image/*">
+              </div>
+
+              <div class="mb-3 d-flex gap-3 flex-wrap">
+                <button class="btn btn-primary shadow-sm" type="submit">💾 Update Blog</button>
+                <a href="/blog/<%= blog._id %>" class="btn-cancel">Cancel</a>
+              </div>
+            </form>
+        </div>
+    </div>
+    
+    <%- include('./partials/footer')  %>
+    <%- include('./partials/script') %>
+
+    <script>
+      const toggleBtn = document.getElementById("darkToggle");
+      if(toggleBtn){
+        toggleBtn.addEventListener("click", () => {
+          document.body.classList.toggle("dark-mode");
+        });
+      }
+    </script>
+</body>
+</html>
