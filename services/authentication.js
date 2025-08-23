@@ -21,20 +21,12 @@ function validateToken(token){
     return payload;
 }
 
-module.exports = {
-    createTokenForUser,
-    validateToken
-}
-
-
-exports.sendOTP = async (email) => {
-    // Generate a 6-digit OTP
+async function sendOTP(email) {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+    const otpExpiresAt = Date.now() + 10 * 60 * 1000;
 
-    // Configure nodemailer
     const transporter = nodemailer.createTransport({
-        service: 'gmail', // Or any SMTP
+        service: 'gmail',
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
@@ -50,5 +42,11 @@ exports.sendOTP = async (email) => {
 
     await transporter.sendMail(mailOptions);
 
-    return { otp, otpExpiry };
+    return { otp, otpExpiresAt };
+}
+
+module.exports = {
+    createTokenForUser,
+    validateToken,
+    sendOTP,
 };

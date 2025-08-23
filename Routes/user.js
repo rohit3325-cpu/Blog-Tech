@@ -19,19 +19,14 @@ router.post('/signin', async(req,res)=>{
 
     return res.cookie("token", token).redirect("/");
    } catch (error) {
-      return res.render("signin", { 
-         error: "Invalid email or password" });
+      const message = error && error.message ? error.message : "Invalid email or password";
+      return res.render("signin", { error: message });
    }
 })
 
-router.post("/signup", async(req,res)=>{
-   const { fullName, email, password } = req.body;
-   await User.create({
-     fullName,
-     email,
-     password,
-   });
-  return res.redirect("/");
+// Delegate legacy /signup POST to OTP-based register flow
+router.post("/signup", (req, res) => {
+   return register(req, res);
 });
 
 router.get("/logout",(req,res)=>{

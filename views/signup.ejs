@@ -73,7 +73,10 @@
    <div class="signup-section">
       <div class="signup-card">
          <h2>Create Account</h2>
-         <form id="signupForm" action="/user/signup" method="post">
+         <% if (typeof error !== 'undefined') { %>
+           <div class="alert alert-danger"><%= error %></div>
+         <% } %>
+         <form id="signupForm" action="/user/register" method="post">
             <div class="mb-3">
                <label for="fullName" class="form-label">Full Name</label>
                <input type="text" class="form-control" id="fullName" name="fullName" required>

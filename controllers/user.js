@@ -3,19 +3,20 @@ const { sendOTP } = require('../services/authentication');
 
 exports.register = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { fullName, email, password } = req.body;
 
-        // Check if user exists
         const existingUser = await User.findOne({ email });
-        if (existingUser) return res.status(400).json({ message: 'Email already registered' });
+        if (existingUser) {
+            return res.status(400).render('signup', { error: 'Email already registered' });
+        }
 
-        // Send OTP
-        const { otp, otpExpiry } = await sendOTP(email);
+        const { otp, otpExpiresAt } = await sendOTP(email);
 
-        const user = await User.create({ name, email, password, otp, otpExpiry });
-        res.status(201).json({ message: 'OTP sent to your email', userId: user._id });
+        const user = await User.create({ fullName, email, password, otp, otpExpiresAt, isVerified: false });
+
+        return res.status(201).render('verify-otp', { userId: user._id, email });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).render('signup', { error: err.message });
     }
 };
 
@@ -24,19 +25,22 @@ exports.verifyOTP = async (req, res) => {
         const { userId, otp } = req.body;
 
         const user = await User.findById(userId);
-        if (!user) return res.status(404).json({ message: 'User not found' });
+        if (!user) {
+            return res.status(404).render('signin', { error: 'User not found' });
+        }
 
-        if (user.otp !== otp || user.otpExpiry < Date.now()) {
-            return res.status(400).json({ message: 'Invalid or expired OTP' });
+        const isExpired = user.otpExpiresAt && user.otpExpiresAt.getTime() < Date.now();
+        if (user.otp !== otp || isExpired) {
+            return res.status(400).render('verify-otp', { userId, email: user.email, error: 'Invalid or expired OTP' });
         }
 
         user.isVerified = true;
         user.otp = undefined;
-        user.otpExpiry = undefined;
+        user.otpExpiresAt = undefined;
         await user.save();
 
-        res.status(200).json({ message: 'Email verified successfully' });
+        return res.redirect('/user/signin');
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).render('signin', { error: err.message });
     }
 };

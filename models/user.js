@@ -45,7 +45,7 @@ const userSchema = new Schema({
  userSchema.pre("save", function (next) {
     const user = this;
 
-    if(!user.isModified("password")) return;
+    if(!user.isModified("password")) return next();
 
     const salt = randomBytes(16).toString('hex');
     const hashedPassword = createHmac('sha256', salt)
@@ -61,6 +61,9 @@ const userSchema = new Schema({
   userSchema.static('matchPasswordAndgenerateToken', async function(email,password) {
     const user= await this.findOne({ email });
     if(!user) throw new Error("User not found");
+    if(!user.isVerified) {
+        throw new Error("Please verify your email");
+    }
 
     const salt = user.salt;
     const hashedpassword= user.password;
