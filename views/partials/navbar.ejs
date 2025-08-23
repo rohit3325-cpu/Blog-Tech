@@ -1,53 +1,48 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+<nav class="navbar navbar-dark bg-dark shadow-sm sticky-top">
   <div class="container">
     <!-- Brand -->
     <a class="navbar-brand fw-bold fs-4" href="#">Blog-Tech</a>
 
     <!-- Toggle Button for Mobile -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" 
-      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Navbar Links -->
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav ms-auto">
-        <!-- Home -->
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
+    <!-- Desktop Menu -->
+    <div class="d-none d-lg-flex ms-auto align-items-center">
+      <ul class="navbar-nav d-flex flex-row align-items-center">
+        <li class="nav-item mx-2">
+          <a class="nav-link active" href="/">Home</a>
         </li>
 
-        <!-- If logged in -->
         <% if (locals.user) { %>
-          <li class="nav-item">
+          <li class="nav-item mx-2">
             <a class="nav-link" href="/blog/add-new">Add Blog</a>
-          </li> 
+          </li>
           <!-- Dropdown -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle fw-semibold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-           <img 
-  src="/images/image_avatar.png" 
-  alt="Avatar" 
-  style="width:35px; height:35px; border-radius:50%; object-fit:cover; margin-left:8px; border:2px solid white;"
-/>
-
+          <li class="nav-item dropdown mx-2">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              <img 
+                src="/images/image_avatar.png" 
+                alt="Avatar" 
+                style="width:35px; height:35px; border-radius:50%; object-fit:cover; border:2px solid white;"
+              />
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow">
               <li><a class="dropdown-item text-danger fw-semibold" href="/user/logout">Logout</a></li>
             </ul>
           </li>
         <% } else { %>
-          <!-- If not logged in -->
-          <li class="nav-item">
+          <li class="nav-item mx-2">
             <a class="nav-link" href="/user/signin">Sign In</a>
-          </li> 
-          <li class="nav-item">
-            <a class="nav-link btn btn-primary text-white px-3 ms-2 rounded-3" href="/user/signup">Create Account</a>
-          </li> 
+          </li>
+          <li class="nav-item mx-2">
+            <a class="btn btn-primary text-white px-3 rounded-3" href="/user/signup">Create Account</a>
+          </li>
         <% } %>
 
         <!-- Dark Mode Toggle -->
-        <li class="nav-item d-flex align-items-center ms-3">
+        <li class="nav-item ms-3">
           <button id="darkModeToggle" class="btn btn-sm btn-outline-light rounded-circle">🌙</button>
         </li>
       </ul>
@@ -55,36 +50,71 @@
   </div>
 </nav>
 
-<!-- Error Alert -->
-<% if(locals.error) { %>
-  <div class="container mt-4">
-    <div class="alert alert-danger shadow-sm rounded-3" role="alert">
-      <%= locals.error %>
-    </div>
+<!-- Offcanvas Drawer for Mobile -->
+<div class="offcanvas offcanvas-end bg-dark text-white" tabindex="-1" id="mobileMenu">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title fw-bold">Menu</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
   </div>
-<% } %>
+  <div class="offcanvas-body">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link text-white" href="/">Home</a>
+      </li>
 
-<!-- Dark Mode Script -->
+      <% if (locals.user) { %>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/blog/add-new">Add Blog</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-danger fw-semibold" href="/user/logout">Logout</a>
+        </li>
+      <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/user/signin">Sign In</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-primary w-100 mt-2" href="/user/signup">Create Account</a>
+        </li>
+      <% } %>
+
+      <li class="nav-item mt-3">
+        <button id="darkModeToggleMobile" class="btn btn-outline-light w-100">🌙 Dark Mode</button>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Dark Mode Script (applies to both desktop + mobile toggle) -->
 <script>
   const toggleBtn = document.getElementById('darkModeToggle');
+  const toggleBtnMobile = document.getElementById('darkModeToggleMobile');
   const body = document.body;
 
-  // Load saved preference
-  if (localStorage.getItem('theme') === 'dark') {
-    body.classList.add('dark-mode');
-    toggleBtn.textContent = '☀️';
+  function applyTheme() {
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      if (toggleBtn) toggleBtn.textContent = '☀️';
+      if (toggleBtnMobile) toggleBtnMobile.textContent = '☀️ Light Mode';
+    } else {
+      body.classList.remove('dark-mode');
+      if (toggleBtn) toggleBtn.textContent = '🌙';
+      if (toggleBtnMobile) toggleBtnMobile.textContent = '🌙 Dark Mode';
+    }
   }
 
-  toggleBtn.addEventListener('click', () => {
-    body.classList.toggle('dark-mode');
+  applyTheme();
 
-    if (body.classList.contains('dark-mode')) {
-      toggleBtn.textContent = '☀️';
-      localStorage.setItem('theme', 'dark');
-    } else {
-      toggleBtn.textContent = '🌙';
-      localStorage.setItem('theme', 'light');
+  [toggleBtn, toggleBtnMobile].forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', () => {
+        if (body.classList.contains('dark-mode')) {
+          localStorage.setItem('theme', 'light');
+        } else {
+          localStorage.setItem('theme', 'dark');
+        }
+        applyTheme();
+      });
     }
   });
 </script>
-
