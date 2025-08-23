@@ -1,22 +1,9 @@
 const { Router } = require("express");
-const multer = require("multer");
-const path = require("path");
 const Blog = require("../models/blog");
 const Comment = require("../models/comments");
+const { upload } = require("../config/cloudinary"); // <-- Import Cloudinary upload
 
 const router = Router();
-
-// ✅ Multer storage setup
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve(__dirname, "../public/uploads"));
-  },
-  filename: function (req, file, cb) {
-    const fileName = `${Date.now()}-${file.originalname}`;
-    cb(null, fileName);
-  },
-});
-const upload = multer({ storage: storage });
 
 // ✅ Middleware to check login
 function requireLogin(req, res, next) {
@@ -36,7 +23,6 @@ async function requireAuthor(req, res, next) {
       return res.status(403).send("Unauthorized");
     }
 
-    // Attach blog so we don’t query again
     req.blog = blog;
     next();
   } catch (err) {
@@ -47,9 +33,7 @@ async function requireAuthor(req, res, next) {
 
 // ✅ Add Blog Page
 router.get("/add-new", requireLogin, (req, res) => {
-  res.render("addblog", {
-    user: req.user,
-  });
+  res.render("addblog", { user: req.user });
 });
 
 // ✅ Single Blog Page
@@ -57,21 +41,16 @@ router.get("/:id", async (req, res) => {
   const blog = await Blog.findById(req.params.id).populate("createdBy");
   const comments = await Comment.find({ blogId: req.params.id }).populate("createdBy");
 
-  return res.render("blog", {
-    user: req.user,
-    blog,
-    comments,
-  });
+  return res.render("blog", { user: req.user, blog, comments });
 });
 
 // ✅ Add Comment
 router.post("/comment/:blogId", requireLogin, async (req, res) => {
-  const comment = await Comment.create({
+  await Comment.create({
     content: req.body.content,
     blogId: req.params.blogId,
     createdBy: req.user._id,
   });
-
   return res.redirect(`/blog/${req.params.blogId}`);
 });
 
@@ -82,17 +61,14 @@ router.post("/", requireLogin, upload.single("coverImage"), async (req, res) => 
     title,
     body,
     createdBy: req.user._id,
-    coverImageURL: req.file ? `/uploads/${req.file.filename}` : null,
+    coverImageURL: req.file ? req.file.path : null, // Cloudinary returns URL
   });
   return res.redirect(`/blog/${blog._id}`);
 });
 
 // ✅ Edit Blog (Form page)
 router.get("/edit/:id", requireLogin, requireAuthor, (req, res) => {
-  res.render("editBlog", {
-    user: req.user,
-    blog: req.blog,
-  });
+  res.render("editBlog", { user: req.user, blog: req.blog });
 });
 
 // ✅ Update Blog (POST)
@@ -102,7 +78,7 @@ router.post("/edit/:id", requireLogin, requireAuthor, upload.single("coverImage"
     const updateData = { title, body };
 
     if (req.file) {
-      updateData.coverImageURL = `/uploads/${req.file.filename}`;
+      updateData.coverImageURL = req.file.path; // Cloudinary URL
     }
 
     await Blog.findByIdAndUpdate(req.params.id, updateData);
