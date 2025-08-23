@@ -5,49 +5,136 @@
    <title>Home Page</title>
    <style>
       body {
-         background: #f7f9fc;
+         background: #121212;
+         color: #e0e0e0;
          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
-      /* Hero Section */
+
       .hero {
+         min-height: 100vh;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding: 0 20px;
          text-align: center;
-         padding: 80px 20px;
-         background: linear-gradient(135deg, #4a90e2, #6c63ff);
+      }
+      .hero-icon {
+         width: 64px;
+         height: 64px;
+         background: linear-gradient(135deg, #4a90e2, #357abd);
+         border-radius: 50%;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         margin: 0 auto 24px;
          color: white;
-         border-radius: 16px;
-         margin: 40px auto;
+         font-size: 32px;
       }
       .hero h1 {
          font-size: 3rem;
          font-weight: bold;
+         margin-bottom: 20px;
+      }
+      .hero h1 span {
+         background: linear-gradient(135deg, #4a90e2, #357abd);
+         -webkit-background-clip: text;
+         -webkit-text-fill-color: transparent;
       }
       .hero p {
          font-size: 1.2rem;
-         margin: 15px 0;
          opacity: 0.9;
+         margin-bottom: 30px;
+         max-width: 600px;
+         margin-left: auto;
+         margin-right: auto;
       }
-      .hero .btn {
-         background-color: white;
-         color: #4a90e2;
-         font-weight: 600;
-         padding: 10px 20px;
+      .hero-buttons {
+         display: flex;
+         flex-direction: column;
+         gap: 16px;
+         align-items: center;
+         justify-content: center;
+         margin-bottom: 48px;
+      }
+      @media(min-width: 640px) {
+         .hero-buttons {
+            flex-direction: row;
+         }
+      }
+      .hero-buttons a {
+         padding: 12px 30px;
          border-radius: 12px;
+         font-weight: 600;
+         text-decoration: none;
          transition: 0.3s;
       }
-      .hero .btn:hover {
-         background-color: #f1f1f1;
+      .hero-buttons a.write {
+         background: linear-gradient(135deg, #4a90e2, #357abd);
+         color: white;
+      }
+      .hero-buttons a.write:hover {
+         box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      }
+      .hero-buttons a.join {
+         border: 2px solid #4a90e2;
+         color: #4a90e2;
+         background: transparent;
+      }
+      .hero-buttons a.join:hover {
+         background: rgba(74, 144, 226, 0.1);
       }
 
-      /* Blog Cards */
+      .features {
+         display: grid;
+         grid-template-columns: 1fr;
+         gap: 24px;
+         max-width: 900px;
+         margin: 0 auto 64px;
+      }
+      @media(min-width: 768px) {
+         .features {
+            grid-template-columns: repeat(3, 1fr);
+         }
+      }
+      .feature {
+         text-align: center;
+      }
+      .feature-icon {
+         width: 48px;
+         height: 48px;
+         background: rgba(74, 144, 226, 0.1);
+         border-radius: 50%;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         margin: 0 auto 16px;
+         font-size: 24px;
+         color: #4a90e2;
+      }
+      .feature h3 {
+         font-size: 1.2rem;
+         font-weight: 600;
+         margin-bottom: 8px;
+      }
+
+      /* Blog Cards (kept from before) */
       .card {
+         background-color: #1e1e1e;
          border: none;
          border-radius: 16px;
-         box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+         box-shadow: 0 6px 20px rgba(0,0,0,0.6);
          transition: transform 0.3s ease, box-shadow 0.3s ease;
+         color: #e0e0e0;
       }
       .card:hover {
          transform: translateY(-5px);
-         box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+         box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      }
+      .card-img-top {
+         border-top-left-radius: 16px;
+         border-top-right-radius: 16px;
+         height: 200px;
+         object-fit: cover;
       }
       .card-body {
          padding: 1.2rem;
@@ -58,38 +145,84 @@
       .card-title {
          font-size: 1.1rem;
          font-weight: 600;
+         color: #ffffff;
+      }
+      .btn-primary {
+         background-color: #4a90e2;
+         border: none;
+         border-radius: 12px;
+         padding: 0.5rem 1.2rem;
+         font-weight: 500;
+         transition: all 0.3s ease;
+         text-decoration: none;
+         color: white;
+      }
+      .btn-primary:hover {
+         background-color: #357abd;
       }
    </style>
 </head>
 <body>
    <%- include('./partials/navbar') %>
 
-   <!-- Hero Section -->
-   <div class="container">
-      <div class="hero">
-         <h1>Welcome to BlogTech</h1>
-         <p>"Where thoughts turn into words and ideas come alive."</p>
-         <a href="/blog/add-new" class="btn">Write a Blog</a>
+   <!-- New Hero Section -->
+   <div class="hero">
+      <div>
+         <div class="hero-icon">
+            <i class="fas fa-book-open"></i>
+         </div>
+         <h1>Welcome to <span>BlogWriter</span></h1>
+         <p>Your beautiful writing space to create, share, and connect with readers around the world.</p>
+
+         <div class="hero-buttons">
+            <a href="/blog/add-new" class="write"><i class="fas fa-pen mr-2"></i> Start Writing</a>
+            <a href="/signup" class="join"><i class="fas fa-users mr-2"></i> Join Community</a>
+         </div>
+
+         <div class="features">
+            <div class="feature">
+               <div class="feature-icon"><i class="fas fa-pen"></i></div>
+               <h3>Beautiful Editor</h3>
+               <p>Write with a distraction-free, elegant editor.</p>
+            </div>
+            <div class="feature">
+               <div class="feature-icon"><i class="fas fa-users"></i></div>
+               <h3>Connect Readers</h3>
+               <p>Build your audience and engage with your community.</p>
+            </div>
+            <div class="feature">
+               <div class="feature-icon"><i class="fas fa-book-open"></i></div>
+               <h3>Share Stories</h3>
+               <p>Publish and share your thoughts with the world.</p>
+            </div>
+         </div>
       </div>
    </div>
 
    <!-- Blog Topics -->
- <div class="container mt-5 ">
-    <div class="row g-4"> <% blogs.forEach(blog => { %> 
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <div class="card h-100"> 
-            <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="Blog Cover"> 
-            <div class="card-body d-flex flex-column"> 
-               <h5 class="card-title"><%= blog.title %></h5> 
-               <a href="/blog/<%= blog._id %>" class="btn btn-primary mt-auto">View</a>
-             </div> 
-            </div> 
-         </div> 
-         <% }) %> 
-      </div> 
+   <div class="container mt-5">
+      <div class="row g-4">
+         <% if (blogs && blogs.length > 0) { %>
+            <% blogs.forEach(blog => { %>
+               <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                  <div class="card h-100">
+                     <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="Blog Cover">
+                     <div class="card-body d-flex flex-column">
+                        <h5 class="card-title"><%= blog.title %></h5>
+                        <a href="/blog/<%= blog._id %>" class="btn btn-primary mt-auto">View</a>
+                     </div>
+                  </div>
+               </div>
+            <% }) %>
+         <% } else { %>
+            <p class="text-center">No blogs available yet. Be the first to <a href="/blog/add-new">write one!</a></p>
+         <% } %>
+      </div>
    </div>
 
    <%- include('./partials/footer') %>
    <%- include('./partials/script') %>
+   <!-- Add Font Awesome for icons -->
+   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
