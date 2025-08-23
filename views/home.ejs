@@ -1,13 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <%- include('./partials/head')  %>
+   <%- include('./partials/head') %>
    <title>Home Page</title>
    <style>
       body {
          background: #f7f9fc;
          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
+      /* Hero Section */
+      .hero {
+         text-align: center;
+         padding: 80px 20px;
+         background: linear-gradient(135deg, #4a90e2, #6c63ff);
+         color: white;
+         border-radius: 16px;
+         margin: 40px auto;
+      }
+      .hero h1 {
+         font-size: 3rem;
+         font-weight: bold;
+      }
+      .hero p {
+         font-size: 1.2rem;
+         margin: 15px 0;
+         opacity: 0.9;
+      }
+      .hero .btn {
+         background-color: white;
+         color: #4a90e2;
+         font-weight: 600;
+         padding: 10px 20px;
+         border-radius: 12px;
+         transition: 0.3s;
+      }
+      .hero .btn:hover {
+         background-color: #f1f1f1;
+      }
+
+      /* Blog Cards */
       .card {
          border: none;
          border-radius: 16px;
@@ -18,41 +49,40 @@
          transform: translateY(-5px);
          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       }
-      .card-img-top {
-         border-top-left-radius: 16px;
-         border-top-right-radius: 16px;
-         height: 200px;
-         object-fit: cover;
-      }
       .card-body {
          padding: 1.2rem;
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
       }
-      .btn-primary {
-         border-radius: 12px;
-         padding: 0.5rem 1.2rem;
-         font-weight: 500;
-         transition: all 0.3s ease;
-      }
-      .btn-primary:hover {
-         transform: scale(1.05);
+      .card-title {
+         font-size: 1.1rem;
+         font-weight: 600;
       }
    </style>
 </head>
 <body>
-   <%- include('./partials/navbar')  %>
+   <%- include('./partials/navbar') %>
 
-   <div class="container mt-5 ">
+   <!-- Hero Section -->
+   <div class="container">
+      <div class="hero">
+         <h1>Welcome to BlogTech</h1>
+         <p>"Where thoughts turn into words and ideas come alive."</p>
+         <a href="/blog/add-new" class="btn">Write a Blog</a>
+      </div>
+   </div>
+
+   <!-- Blog Topics -->
+   <div class="container mt-5">
+      <h2 class="mb-4 text-center">Explore Blogs</h2>
       <div class="row g-4">
          <% blogs.forEach(blog => { %>
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                <div class="card h-100">
-                  <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="Blog Cover">
-                  <div class="card-body d-flex flex-column">
+                  <div class="card-body">
                      <h5 class="card-title"><%= blog.title %></h5>
-                     <p class="card-text flex-grow-1">
-                        Some quick example text to build on the card title and make up the bulk of the card’s content.
-                     </p>
-                     <a href="/blog/<%= blog._id %>" class="btn btn-primary mt-auto">View</a>
+                     <a href="/blog/<%= blog._id %>" class="btn btn-sm btn-primary mt-3">Read More</a>
                   </div>
                </div>
             </div>
@@ -60,7 +90,7 @@
       </div>
    </div>
 
-   <%- include('./partials/footer')  %>
+   <%- include('./partials/footer') %>
    <%- include('./partials/script') %>
 </body>
 </html>
