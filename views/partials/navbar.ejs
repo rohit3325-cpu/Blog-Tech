@@ -3,12 +3,12 @@
     <!-- Brand -->
     <a class="navbar-brand fw-bold fs-4" href="#">Blog-Tech</a>
 
-    <!-- Toggle Button for Mobile (only visible on mobile) -->
+    <!-- Toggle Button for Mobile -->
     <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Desktop Menu (only visible on desktop) -->
+    <!-- Desktop Menu -->
     <div class="d-none d-lg-flex ms-auto align-items-center">
       <ul class="navbar-nav d-flex flex-row align-items-center">
         <li class="nav-item mx-2">
@@ -41,7 +41,7 @@
           </li>
         <% } %>
 
-        <!-- Dark Mode Toggle -->
+        <!-- Dark Mode Toggle (Desktop) -->
         <li class="nav-item ms-3">
           <button id="darkModeToggle" class="btn btn-sm btn-outline-light rounded-circle">🌙</button>
         </li>
@@ -50,7 +50,7 @@
   </div>
 </nav>
 
-<!-- Offcanvas Drawer (only triggered on mobile) -->
+<!-- Offcanvas Drawer (Mobile) -->
 <div class="offcanvas offcanvas-end bg-dark text-white d-lg-none" tabindex="-1" id="mobileMenu">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title fw-bold">Menu</h5>
@@ -78,9 +78,55 @@
         </li>
       <% } %>
 
+      <!-- Dark Mode Toggle (Mobile) -->
       <li class="nav-item mt-3">
         <button id="darkModeToggleMobile" class="btn btn-outline-light w-100">🌙 Dark Mode</button>
       </li>
     </ul>
   </div>
 </div>
+
+<script>
+  const body = document.body;
+  const toggleBtn = document.getElementById("darkModeToggle");
+  const toggleBtnMobile = document.getElementById("darkModeToggleMobile");
+
+  function setTheme(theme) {
+    if (theme === "dark") {
+      body.classList.add("dark-mode");
+      body.classList.remove("light-mode");
+      toggleBtn.textContent = "☀️";
+      toggleBtnMobile.textContent = "☀️ Light Mode";
+      localStorage.setItem("theme", "dark");
+    } else {
+      body.classList.add("light-mode");
+      body.classList.remove("dark-mode");
+      toggleBtn.textContent = "🌙";
+      toggleBtnMobile.textContent = "🌙 Dark Mode";
+      localStorage.setItem("theme", "light");
+    }
+  }
+
+  // Apply stored theme on load
+  setTheme(localStorage.getItem("theme") || "light");
+
+  // Listeners for both buttons
+  toggleBtn.addEventListener("click", () => {
+    setTheme(body.classList.contains("dark-mode") ? "light" : "dark");
+  });
+
+  toggleBtnMobile.addEventListener("click", () => {
+    setTheme(body.classList.contains("dark-mode") ? "light" : "dark");
+  });
+</script>
+
+<style>
+  body.light-mode {
+    background-color: #f7f9fc;
+    color: #212529;
+  }
+  body.dark-mode {
+    background-color: #121212;
+    color: #f8f9fa;
+  }
+</style>
