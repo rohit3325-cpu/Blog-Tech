@@ -31,14 +31,14 @@
          text-align: center;
          color: #333;
       }
-      .btn-primary {
+      .btn-primary, .btn-success {
          width: 100%;
          border-radius: 12px;
          padding: 0.75rem;
          font-weight: 500;
          transition: 0.3s;
       }
-      .btn-primary:hover {
+      .btn-primary:hover, .btn-success:hover {
          transform: translateY(-2px);
          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       }
@@ -47,14 +47,8 @@
          to {opacity: 1; transform: translateY(0);}
       }
       /* OTP Section */
-      .otp-section {
-         margin-top: 1.5rem;
-         display: none;
-      }
-      .otp-input {
-         display: flex;
-         justify-content: space-between;
-      }
+      .otp-section { margin-top: 1.5rem; display: none; }
+      .otp-input { display: flex; justify-content: space-between; }
       .otp-input input {
          width: 40px;
          height: 50px;
@@ -66,14 +60,12 @@
    </style>
 </head>
 <body>
-   <!-- Navbar always on top -->
    <%- include('./partials/navbar') %>
 
-   <!-- Signup Form Centered -->
    <div class="signup-section">
       <div class="signup-card">
          <h2>Create Account</h2>
-         <form id="signupForm" action="/user/signup" method="post">
+         <form id="signupForm">
             <div class="mb-3">
                <label for="fullName" class="form-label">Full Name</label>
                <input type="text" class="form-control" id="fullName" name="fullName" required>
@@ -94,10 +86,9 @@
             <button type="submit" class="btn btn-primary">Sign Up</button>
          </form>
 
-         OTP Verification Section
          <div class="otp-section" id="otpSection">
             <h5>Enter the OTP sent to your email</h5>
-            <form action="/user/verify-otp" method="post">
+            <form id="otpForm">
                <input type="hidden" name="email" id="otpEmail">
                <div class="otp-input mb-3">
                   <input type="text" maxlength="1" name="otp[]" required>
@@ -116,9 +107,11 @@
 
 <script>
 const signupForm = document.getElementById("signupForm");
+const otpForm = document.getElementById("otpForm");
 const otpSection = document.getElementById("otpSection");
 const otpEmail = document.getElementById("otpEmail");
 
+// Handle signup form
 signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const data = {
@@ -127,23 +120,49 @@ signupForm.addEventListener("submit", async (e) => {
         password: document.getElementById("exampleInputPassword1").value
     };
 
-    const response = await fetch("/user/signup", {
+    const response = await fetch("/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     });
     const result = await response.json();
+
     if (response.ok) {
         otpEmail.value = data.email;
         otpSection.style.display = "block";
         signupForm.style.display = "none";
+        alert(result.message);
     } else {
         alert(result.message);
     }
 });
 
+// Handle OTP verification
+otpForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const otpInputs = document.querySelectorAll("input[name='otp[]']");
+    const otp = Array.from(otpInputs).map(input => input.value).join("");
+    const email = otpEmail.value;
+
+    const response = await fetch("/user/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        alert(result.message);
+        window.location.href = "/signin";
+    } else {
+        alert(result.message);
+    }
+});
+
+// Resend OTP
 async function resendOtp() {
-    const email = document.getElementById("otpEmail").value; // get the email
+    const email = otpEmail.value;
 
     try {
         const response = await fetch("/user/resend-otp", {
@@ -151,24 +170,15 @@ async function resendOtp() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email })
         });
-
         const result = await response.json();
-
-        if (response.ok) {
-            alert(result.message); // OTP resent
-        } else {
-            alert(result.message); // show error
-        }
+        alert(result.message);
     } catch (err) {
         console.error(err);
         alert("Failed to resend OTP");
     }
 }
-
-
 </script>
 
-
-   <%- include('./partials/script') %>
+<%- include('./partials/script') %>
 </body>
 </html>
