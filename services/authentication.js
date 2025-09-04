@@ -21,13 +21,10 @@ function validateToken(token){
     return payload;
 }
 
-module.exports = {
-    createTokenForUser,
-    validateToken
-}
 
 
-exports.sendOTP = async (email) => {
+
+const sendOTP = async (email) => {
     // Generate a 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
@@ -52,3 +49,9 @@ exports.sendOTP = async (email) => {
 
     return { otp, otpExpiry };
 };
+
+module.exports = {
+    createTokenForUser,
+    validateToken,
+    sendOTP
+}

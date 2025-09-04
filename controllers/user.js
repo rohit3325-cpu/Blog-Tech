@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const { sendOTP } = require('../services/authentication');
 
-exports.register = async (req, res) => {
+const register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
     }
 };
 
-exports.verifyOTP = async (req, res) => {
+const verifyOTP = async (req, res) => {
     try {
         const { userId, otp } = req.body;
 
@@ -40,3 +40,8 @@ exports.verifyOTP = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+module.exports ={
+    register,
+    verifyOTP
+}
