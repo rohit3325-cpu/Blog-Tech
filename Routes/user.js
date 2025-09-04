@@ -40,5 +40,6 @@ router.get("/logout",(req,res)=>{
 
 router.post('/register', register);
 router.post('/verify-otp', verifyOTP);
+router.post('/resend-otp', resendOtpController);
 
 module.exports = router;

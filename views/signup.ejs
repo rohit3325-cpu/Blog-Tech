@@ -114,24 +114,60 @@
       </div>
    </div>
 
-   <script>
-      // Example: Show OTP section after signup (client-side simulation)
-      const signupForm = document.getElementById("signupForm");
-      const otpSection = document.getElementById("otpSection");
-      const otpEmail = document.getElementById("otpEmail");
+<script>
+const signupForm = document.getElementById("signupForm");
+const otpSection = document.getElementById("otpSection");
+const otpEmail = document.getElementById("otpEmail");
 
-      signupForm.addEventListener("submit", function(e) {
-         e.preventDefault();
-         otpEmail.value = document.getElementById("exampleInputEmail1").value;
-         signupForm.style.display = "none";
-         otpSection.style.display = "block";
-      });
+signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = {
+        name: document.getElementById("fullName").value,
+        email: document.getElementById("exampleInputEmail1").value,
+        password: document.getElementById("exampleInputPassword1").value
+    };
 
-      function resendOtp() {
-         alert("OTP resent to your email!");
-         // Make an AJAX call to /user/resend-otp if needed
-      }
-   </script>
+    const response = await fetch("/user/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    if (response.ok) {
+        otpEmail.value = data.email;
+        otpSection.style.display = "block";
+        signupForm.style.display = "none";
+    } else {
+        alert(result.message);
+    }
+});
+
+async function resendOtp() {
+    const email = document.getElementById("otpEmail").value; // get the email
+
+    try {
+        const response = await fetch("/user/resend-otp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(result.message); // OTP resent
+        } else {
+            alert(result.message); // show error
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Failed to resend OTP");
+    }
+}
+
+
+</script>
+
 
    <%- include('./partials/script') %>
 </body>
