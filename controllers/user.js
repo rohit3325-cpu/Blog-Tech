@@ -6,15 +6,29 @@ const register = async (req, res) => {
     try {
         const { fullName, email, password } = req.body;
 
-        const existingUser = await User.findOne({ email });
+        let existingUser = await User.findOne({ email });
+
         if (existingUser) {
-            return res.status(400).json({ message: 'Email already registered' });
+            if (existingUser.isVerified) {
+                return res.status(400).json({ message: 'Email already registered' });
+            } else {
+                // User exists but not verified → update OTP & password
+                const { otp, otpExpiry } = await sendOTP(email);
+
+                existingUser.fullName = fullName; // optional: update name
+                existingUser.password = password; // will be hashed in pre-save hook
+                existingUser.otp = otp;
+                existingUser.otpExpiresAt = otpExpiry;
+                await existingUser.save();
+
+                console.log(`OTP for ${email} is ${otp}`); // log OTP for testing
+                return res.status(200).json({ message: 'OTP resent to your email', email });
+            }
         }
 
-        // Generate OTP and expiry
+        // Create new user if email doesn't exist
         const { otp, otpExpiry } = await sendOTP(email);
 
-        // Let the model pre-save hook hash the password
         const user = await User.create({
             fullName,
             email,
@@ -24,16 +38,14 @@ const register = async (req, res) => {
             isVerified: false,
         });
 
-        res.status(201).json({ 
-            message: 'OTP sent to your email', 
-            userId: user._id,
-            email: user.email 
-        });
+        console.log(`OTP for ${email} is ${otp}`); // log OTP
+        res.status(201).json({ message: 'OTP sent to your email', email });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: err.message });
     }
 };
+
 
 // Verify OTP
 const verifyOTP = async (req, res) => {

@@ -14,18 +14,23 @@ router.get("/signup", (req, res) => {
 });
 
 // Login route
+// Login route
 router.post('/signin', async (req, res) => {
    try {
       const { email, password } = req.body;
-      const token = await User.matchPasswordAndgenerateToken(email, password);
+      const token = await User.matchPasswordAndGenerateToken(email, password);
 
-      return res.cookie("token", token).redirect("/");
+      return res.cookie("token", token, {
+         httpOnly: true,
+         secure: process.env.NODE_ENV === "production"
+      }).redirect("/");
    } catch (error) {
       return res.render("signin", { 
-         error: "Invalid email or password" 
+         error: error.message // show actual error (like "Please verify your email")
       });
    }
 });
+
 
 // 🚨 Remove old /signup (direct insert) to avoid bypass
 // Use OTP-based /register instead
