@@ -153,8 +153,10 @@ otpForm.addEventListener("submit", async (e) => {
     const result = await response.json();
 
     if (response.ok) {
-        alert(result.message);
-        window.location.href = "/signin";
+    document.cookie = `token=${result.token}; path=/;`;
+    alert(result.message);
+    window.location.replace("/"); // go to home page}
+
     } else {
         alert(result.message);
     }
