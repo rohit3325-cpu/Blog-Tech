@@ -38,9 +38,9 @@ const register = async (req, res) => {
 // Verify OTP
 const verifyOTP = async (req, res) => {
     try {
-        const { userId, otp } = req.body;
+        const { email, otp } = req.body;
 
-        const user = await User.findById(userId);
+        const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         if (user.otp !== otp || user.otpExpiresAt < Date.now()) {
@@ -52,8 +52,7 @@ const verifyOTP = async (req, res) => {
         user.otpExpiresAt = undefined;
         await user.save();
 
-        // Optional: generate JWT after verification
-        const token = createTokenForUser(user);
+        const token = createTokenForUser(user); // optional: login automatically
 
         res.status(200).json({ 
             message: 'Email verified successfully', 
@@ -64,6 +63,7 @@ const verifyOTP = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
 
 // Resend OTP
 const resendOtpController = async (req, res) => {
