@@ -1,6 +1,6 @@
 const {Router} = require("express");
 const User = require("../models/user"); // Assuming the user model is in models/user.js
-const { register, verifyOTP } = require('../controllers/user');
+const { register, verifyOTP, resendOtpController } = require('../controllers/user');
 
 const router = Router();
 
